@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Processing Canvas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+</head>
+<body>
+  <script>
+ 
+
+function setup() {
+  if (windowWidth>windowHeight){
+  	createCanvas(windowWidth,windowHeight)
+  }
+  if (windowWidth<=windowHeight){
+  	createCanvas(windowWidth,windowHeight)
+  }
+  R=79597870700;
+  G=3e-10;
+  //quality
+  sun_quality=1e38;
+  earth_quality=4e38;
+  //positon
+  sun_position=createVector(-59597870700,-2000000);
+  earth_position=createVector(59597870700,2000000);
+  //speed
+  sun_speed=createVector(0,-5e8);
+  earth_speed=createVector(0,3.78e8/3);
+  //force
+  sun_force=createVector(0,0);
+  earth_force=createVector(0,0);
+  //add_speed
+  sun_add_speed=createVector(0,0);
+  earth_add_speed=createVector(0,0);
+  
+}
+
+function draw() {
+  background(0,0,0,50);
+  //force
+  
+  earth_force=createVector(sun_position.x-earth_position.x,sun_position.y-earth_position.y);
+  sun_force=createVector(earth_position.x-sun_position.x,earth_position.y-sun_position.y);
+  
+  
+  sun_force=sun_force.copy().normalize().div(sun_force.magSq()).mult(sun_quality).mult(earth_quality).mult(G);
+  earth_force=earth_force.copy().normalize().div(earth_force.magSq()).mult(sun_quality).mult(earth_quality).mult(G);
+  sun_add_speed=sun_force.copy().div(sun_quality);
+  earth_add_speed=earth_force.copy().div(earth_quality);
+  //speed
+  sun_speed.add(sun_add_speed);
+  earth_speed.add(earth_add_speed);
+  
+  //position
+  earth_position.add(earth_speed);
+  sun_position.add(sun_speed);
+  
+  fill(255);
+  
+  //sun
+  circle(map(sun_position.x,1.3*R,-1.3*R,width,0),
+        map(sun_position.y,1.3*R,-1.3*R,0,height),40);
+  //earth
+  circle(map(earth_position.x,1.3*R,-1.3*R,width,0),
+        map(earth_position.y,1.3*R,-1.3*R,0,height),40);
+  
+}
+  
+  
+  
+  
+  
+  
+
+    
+  </script>
+</body>
+</html>
