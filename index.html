@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Processing Canvas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+</head>
+<body>
+  <script>
+ 
+
+function setup() {
+  createCanvas(600,600);
+  R=549597870700;
+  G=7e-11;
+  //quality
+  quality=[]
+  quality[0]=2e30;
+  quality[1]=2e30;
+  quality[2]=2e30;
+  //poisiton
+  position=[];
+  position[0]=createVector(0,0);
+  position[1]=createVector(495978707000,20);
+    //position[2]=createVector(149597486300,0);
+  position[2]=createVector(-395978707000,-20);
+  //speed
+  speed=[];
+  speed[0]=createVector(0,0);
+  speed[1]=createVector(0,1e10);
+  speed[2]=createVector(0,-1e10);
+  //addSpeed
+  addSpeed=[];
+  addSpeed[0]=createVector(0,0);
+  addSpeed[1]=createVector(0,0);
+  addSpeed[2]=createVector(0,0);
+}
+
+function draw() {
+  background(0,0,0,0);
+  //force[0]and add speed[0]
+  force=[]
+  force[0]=createVector(position[1].x-position[0].x,position[1].y-position[0].y);
+  force2_0=createVector(position[2].x-position[0].x,position[2].y-position[0].y);  
+  force[0]=force[0].copy().div(force[0].magSq()).mult(quality[0]).mult(quality[1]).mult(G)
+  force[0]=force[0].add(force2_0.copy().div(force2_0.magSq()).mult(quality[0]).mult(quality[2]).mult(G))
+  addSpeed[0]=force[0].div(quality[0])
+  //force[1] and add speed[2]
+  force[1]=createVector(position[0].x-position[1].x,position[0].y-position[1].y);
+  force2_0=createVector(position[2].x-position[1].x,position[2].y-position[1].y);  
+  force[1]=force[1].copy().div(force[1].magSq()).mult(quality[0]).mult(quality[1]).mult(G)
+  force[1]=force[1].add(force2_0.copy().div(force2_0.magSq()).mult(quality[1]).mult(quality[2]).mult(G))
+  addSpeed[1]=force[1].div(quality[1])
+  //force[2] and add speed[2]
+  force[2]=createVector(position[1].x-position[2].x,position[1].y-position[2].y);
+  force2_0=createVector(position[0].x-position[2].x,position[0].y-position[2].y);  
+  force[2]=force[2].copy().div(force[2].magSq()).mult(quality[2]).mult(quality[1]).mult(G)
+  force[2]=force[2].add(force2_0.copy().div(force2_0.magSq()).mult(quality[0]).mult(quality[2]).mult(G))
+  addSpeed[2]=force[2].div(quality[2])
+  for(n=0;n<3;n++){
+    speed[n].add(addSpeed[n])
+    position[n].add(speed[n])
+  }
+  
+  
+  
+  
+  for (n=0;n<3;n++){
+    circle(position[n].x,position[n].y,50)//圓(位置[n].x,位置[n].y,50)
+    fill((n-1)*(n-2)*125,n*(n-2)*-255,n*(n-1)*125);
+    //fill(255)
+    noStroke()
+    circle(map(position[n].x,-R*1.3,R*1.3,0,width),map(position[n].y,-R*1.3,R*1.3,height,0),5)
+  }
+}
+  
+  
+  
+  
+  
+  
+
+    
+  </script>
+</body>
+</html>
